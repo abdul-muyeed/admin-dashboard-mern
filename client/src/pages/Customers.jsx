@@ -1,13 +1,19 @@
-import { useTheme } from "@emotion/react"
 import { useGetCustomersQuery } from "../state/api"
-import { Box, Button, Card, CardActions, CardContent, Collapse, Rating, Typography, useMediaQuery } from '@mui/material';
+import { Box, useTheme} from '@mui/material';
 import Header from "../components/Header";
 import { DataGrid } from "@mui/x-data-grid";
+import DataGridCustomToolBar from "../components/DataGridCustomToolBar";
+import { useState } from "react";
 
 
 export default function Customers() {
     const theme =  useTheme()
     const {data, isLoading} = useGetCustomersQuery()
+    const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(20);
+  const [sort, setSort] = useState({});
+  const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState('')
     const columns = [
       {
         field: "_id",
@@ -46,9 +52,7 @@ export default function Customers() {
         field: 'role',
         headerName: 'Role',
         flex: 0.5
-      }
-      
-    ]
+      }]
 
   return (
     <Box m='1.5rem 2.5rem'>
@@ -69,6 +73,12 @@ export default function Customers() {
           '& .MuiDataGrid-virtualScroller': {
             backgroundColor: theme.palette.primary.light,
           },
+          '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
+            display: 'none',
+          },
+          '& .MuiDataGrid-withBorderColor': {
+            
+          },
           '& .MuiDataGrid-footerContainer': {
             backgroundColor: theme.palette.background.alt,
             color: theme.palette.secondary[100],
@@ -87,6 +97,13 @@ export default function Customers() {
           getRowId={(row) => row._id} 
           rows={data || []}
           columns={columns}
+          components={{
+            Toolbar: DataGridCustomToolBar
+              
+          }}
+          componentsProps={{
+            toolbar: {searchInput, setSearchInput , setSearch}
+          }}
         ></DataGrid>
       </Box>
     </Box>

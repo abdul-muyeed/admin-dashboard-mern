@@ -1,7 +1,6 @@
-import { Box, Button, Card, CardActions, CardContent, Collapse, Rating, Typography, useMediaQuery } from '@mui/material';
+import { Box,useTheme} from '@mui/material';
 import Header from '../components/Header.jsx';
 import { useGetTransactionsQuery } from '../state/api.js';
-import { useTheme } from '@mui/material'
 import { useState } from 'react';
 import { DataGrid } from "@mui/x-data-grid";
 import DataGridCustomToolBar from '../components/DataGridCustomToolBar.jsx';
@@ -16,6 +15,20 @@ export default function Transactions() {
   const [searchInput, setSearchInput] = useState('')
 
   const { data, isLoading } = useGetTransactionsQuery({ page, pageSize, sort: JSON.stringify(sort), search });
+  const formatDate = (date) => {
+    const formattedDate = new Date(date);
+    const day = formattedDate.getDate();
+    const month = formattedDate.getMonth() + 1;
+    const year = formattedDate.getFullYear();
+    const hours = formattedDate.getHours();
+    const minutes = formattedDate.getMinutes();
+
+    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    const formattedDateTime = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year} Time: ${formattedTime}`;
+
+    return formattedDateTime;
+  };
+
 
   const columns = [
     {
@@ -32,25 +45,35 @@ export default function Transactions() {
       field: "createdAt",
       headerName: "Created At",
       flex: 1,
+      renderCell: (params) => {
+        
+        return formatDate(params?.value);
+      }
+      
     },
     {
       field: "products",
       headerName: "Number of Products",
       flex: 0.5,
       sortable: false,
-      renderCell: (params) => params.value.length
+      
     },
-    {
-      field: 'occupation',
-      headerName: 'Occupation',
-      flex: 0.5,
-    },
+    // {
+    //   field: "createdAt",
+    //   headerName: "Created At",
+    //   flex: 1,
+    //   renderCell: (params) => {
+    //     const date = new Date(params?.value);
+    //     const formattedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+    //     return formattedDate;
+    //   }
+    // },
     {
       field: 'cost',
       headerName: 'Cost',
       flex: 1,
       renderCell: (params) => `$${Number(params?.value).toFixed(2)}`
-    }
+    },
     
   ]
   
@@ -81,6 +104,12 @@ export default function Transactions() {
           '& .MuiDataGrid-toolbarContainer .MuiButton-text': {
             color: `${theme.palette.secondary[200]} !important`,
           },
+          '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
+            display: 'inline',
+            
+            
+
+          },
 
 
 
@@ -93,7 +122,6 @@ export default function Transactions() {
           columns={columns}
           rowCount={(data && data.total) || 0}
           rowsPerPageOptions={[20,50,100]}
-      
           pagination
           page={page}
           pageSize={pageSize}

@@ -2,9 +2,9 @@ import { createApi, fetchBaseQuery,  } from '@reduxjs/toolkit/query/react'
 
 
 export const api = createApi({
-    baseQuery: fetchBaseQuery({ baseUrl: 'https://68644lzf-3000.inc1.devtunnels.ms/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_BASE_URL }),
     reducerPath: 'adminApi',
-    tagTypes: ['User', 'products','customers', 'transactions'],
+    tagTypes: ['User', 'products','customers', 'transactions','geography'],
     endpoints: (build) => ({
         getUser: build.query({
             query: (id) => `general/user/${id}`,
@@ -30,7 +30,12 @@ export const api = createApi({
             }),
             providesTags: ['transactions']
         }),
+        getGeography: build.query({
+            query: () => 'client/geography',
+            providesTags: ['geography']
+        }),
+
     })
 })
 
-export const { useGetUserQuery, useGetProductsQuery, useGetCustomersQuery, useGetTransactionsQuery } = api;
+export const { useGetUserQuery, useGetProductsQuery, useGetCustomersQuery, useGetTransactionsQuery, useGetGeographyQuery } = api;

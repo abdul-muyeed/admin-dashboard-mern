@@ -9,6 +9,7 @@ import {themeSettings} from './theme.js';
 import Products from './pages/Products.jsx';
 import Customers from './pages/Customers.jsx';
 import Transactions from './pages/Transactions.jsx';
+import Geography from './pages/Geography.jsx';
 
 
 
@@ -27,6 +28,7 @@ function App() {
             <Route path="/products" element={<Products/>} />
             <Route path="/customers" element={<Customers/>} />
             <Route path="/transactions" element={<Transactions/>} />
+            <Route path="/geography" element={<Geography/>} />
 
 
             {/* <Route path="/users" element={<Users/>} /> */}
